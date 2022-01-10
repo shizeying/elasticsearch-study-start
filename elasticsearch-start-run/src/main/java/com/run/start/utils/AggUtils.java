@@ -1,16 +1,7 @@
 package com.run.start.utils;
 
 import com.google.common.collect.Lists;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.join.aggregations.Children;
 import org.elasticsearch.search.aggregations.Aggregation;
@@ -29,13 +20,15 @@ import org.elasticsearch.search.aggregations.bucket.nested.Nested;
 import org.elasticsearch.search.aggregations.bucket.range.InternalDateRange;
 import org.elasticsearch.search.aggregations.bucket.range.InternalRange;
 import org.elasticsearch.search.aggregations.bucket.range.Range;
-import org.elasticsearch.search.aggregations.bucket.terms.InternalRareTerms;
-import org.elasticsearch.search.aggregations.bucket.terms.LongTerms;
-import org.elasticsearch.search.aggregations.bucket.terms.SignificantTerms;
-import org.elasticsearch.search.aggregations.bucket.terms.StringTerms;
-import org.elasticsearch.search.aggregations.bucket.terms.Terms;
+import org.elasticsearch.search.aggregations.bucket.terms.*;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms.Bucket;
 import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class AggUtils {
@@ -126,7 +119,13 @@ public class AggUtils {
 	
 	private static void getRangeValue(Range aggregation) {
 		final String rangeKey = aggregation.getName();
-		aggregation.getBuckets().stream().filter(Objects::nonNull).map(AggUtils::getBucket)
+		final Set<AggBean> aggBeans = aggregation
+				.getBuckets()
+				.stream()
+				.filter(Objects::nonNull)
+				.map(AggUtils::getBucket)
+				.collect(Collectors.toSet());
+		
 	}
 	
 	private static void getSignificantTermsValue(SignificantTerms aggregation) {
