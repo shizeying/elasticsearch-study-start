@@ -1,6 +1,5 @@
 package com.run.start;
 
-import com.run.start.tools.JacksonUtil;
 import com.run.start.utils.AggUtils;
 import com.run.start.utils.AggUtils.AggBean;
 import com.run.start.utils.HitsUtils;
@@ -22,9 +21,6 @@ import org.elasticsearch.search.aggregations.bucket.global.GlobalAggregationBuil
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.suggest.Suggest;
-import org.elasticsearch.search.suggest.SuggestBuilder;
-import org.elasticsearch.search.suggest.SuggestBuilders;
-import org.elasticsearch.search.suggest.SuggestionBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
