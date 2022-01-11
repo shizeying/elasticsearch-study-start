@@ -1,0 +1,38 @@
+{
+  "size": 0,
+
+  "aggs": {
+    "发起的法案通过众议院的法案数量": {
+      "filter": {
+        "script": {
+          "script": {
+            "source": "doc['trackers.raw'].size()>0&&doc['trackers.raw'].size()!=0&&doc['trackers.raw'].value.equals('Passed House')"
+          }
+        }
+      }
+    },
+    "发起的法案通过参议院的法案数量": {
+      "filter": {
+        "script": {
+          "script": {
+            "source": "doc['trackers.raw'].size()>0&&doc['trackers.raw'].value.equals('Passed Senate')"
+          }
+        }
+      }
+    },
+    "发起的法案成为法律的法案数量": {
+      "filter": {
+        "script": {
+          "script": {
+            "source": "doc['trackers.raw'].size()>0&&doc['trackers.raw'].value.equals('Became Law')"
+          }
+        }
+      }
+    },
+    "发起的法案总数": {
+      "value_count": {
+        "field": "trackers.raw"
+      }
+    }
+  }
+}

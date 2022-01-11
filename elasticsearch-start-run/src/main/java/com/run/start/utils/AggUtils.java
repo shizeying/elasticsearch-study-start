@@ -1,7 +1,19 @@
 package com.run.start.utils;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.Lists;
-import lombok.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.common.geo.GeoPoint;
 import org.elasticsearch.join.aggregations.Children;
@@ -11,6 +23,7 @@ import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.adjacency.AdjacencyMatrix;
 import org.elasticsearch.search.aggregations.bucket.composite.CompositeAggregation;
 import org.elasticsearch.search.aggregations.bucket.filter.Filters;
+import org.elasticsearch.search.aggregations.bucket.filter.ParsedFilter;
 import org.elasticsearch.search.aggregations.bucket.geogrid.GeoGrid;
 import org.elasticsearch.search.aggregations.bucket.global.Global;
 import org.elasticsearch.search.aggregations.bucket.histogram.Histogram;
@@ -22,14 +35,27 @@ import org.elasticsearch.search.aggregations.bucket.nested.Nested;
 import org.elasticsearch.search.aggregations.bucket.range.InternalDateRange;
 import org.elasticsearch.search.aggregations.bucket.range.InternalRange;
 import org.elasticsearch.search.aggregations.bucket.range.Range;
-import org.elasticsearch.search.aggregations.bucket.terms.*;
+import org.elasticsearch.search.aggregations.bucket.terms.InternalRareTerms;
+import org.elasticsearch.search.aggregations.bucket.terms.LongTerms;
+import org.elasticsearch.search.aggregations.bucket.terms.SignificantTerms;
+import org.elasticsearch.search.aggregations.bucket.terms.StringTerms;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms.Bucket;
-import org.elasticsearch.search.aggregations.metrics.*;
+import org.elasticsearch.search.aggregations.metrics.Avg;
+import org.elasticsearch.search.aggregations.metrics.Cardinality;
+import org.elasticsearch.search.aggregations.metrics.ExtendedStats;
+import org.elasticsearch.search.aggregations.metrics.GeoBounds;
+import org.elasticsearch.search.aggregations.metrics.Max;
+import org.elasticsearch.search.aggregations.metrics.Min;
+import org.elasticsearch.search.aggregations.metrics.Percentile;
+import org.elasticsearch.search.aggregations.metrics.PercentileRanks;
+import org.elasticsearch.search.aggregations.metrics.Percentiles;
+import org.elasticsearch.search.aggregations.metrics.ScriptedMetric;
+import org.elasticsearch.search.aggregations.metrics.Stats;
+import org.elasticsearch.search.aggregations.metrics.Sum;
+import org.elasticsearch.search.aggregations.metrics.TopHits;
+import org.elasticsearch.search.aggregations.metrics.ValueCount;
 import org.springframework.util.CollectionUtils;
-
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class AggUtils {
@@ -43,14 +69,14 @@ public class AggUtils {
 		}
 		List<AggBean> aggBeans = Lists.newArrayList();
 		for (Entry<String, Aggregation> entry : aggregations.getAsMap().entrySet()) {
-			final AggBean aggBean = new AggBean();
-			final String key = entry.getKey();
+			//final AggBean aggBean = new AggBean();
 			final Aggregation value = entry.getValue();
 			final AggBean bean = matchAggGetValues(value);
+			if (Objects.nonNull(bean)) {
+				aggBeans.add(bean);
+				
+			}
 			
-			aggBean.setKeyAsString(key);
-			aggBean.getAggs().add(bean);
-			aggBeans.add(aggBean);
 			
 		}
 		return aggBeans;
@@ -133,23 +159,6 @@ public class AggUtils {
 					.count(value).build();
 			
 		}
-		if (aggregation instanceof Stats) {
-			final String name = aggregation.getName();
-			final String avgAsString = ((Stats) aggregation).getAvgAsString();
-			final long count = ((Stats) aggregation).getCount();
-			final double max = ((Stats) aggregation).getMax();
-			final double sum = ((Stats) aggregation).getSum();
-			final double min = ((Stats) aggregation).getMin();
-			final String type = aggregation.getType();
-			return AggBean.builder()
-					.keyAsString(name)
-					.type(type)
-					.avgAsString(avgAsString)
-					.max(max)
-					.sum(sum)
-					.min(min)
-					.count(count).build();
-		}
 		if (aggregation instanceof ExtendedStats) {
 			final String name = aggregation.getName();
 			final String avgAsString = ((ExtendedStats) aggregation).getAvgAsString();
@@ -171,6 +180,25 @@ public class AggUtils {
 					.stdDeviation(stdDeviation)
 					.sumOfSquares(sumOfSquares)
 					.variance(variance)
+					.count(count).build();
+		}
+		
+		if (aggregation instanceof Stats) {
+			final String name = aggregation.getName();
+			final String avgAsString = ((Stats) aggregation).getAvgAsString();
+			final long count = ((Stats) aggregation).getCount();
+			final double max = ((Stats) aggregation).getMax();
+			final double sum = ((Stats) aggregation).getSum();
+			final double min = ((Stats) aggregation).getMin();
+			
+			final String type = aggregation.getType();
+			return AggBean.builder()
+					.keyAsString(name)
+					.type(type)
+					.avgAsString(avgAsString)
+					.max(max)
+					.sum(sum)
+					.min(min)
 					.count(count).build();
 		}
 		if (aggregation instanceof Percentiles) {
@@ -223,12 +251,45 @@ public class AggUtils {
 					.value(scriptedResult).build();
 			
 		}
+		if (aggregation instanceof TopHits) {
+			final String name = ((TopHits) aggregation).getName();
+			final String type = ((TopHits) aggregation).getType();
+			final SearchHits hits = ((TopHits) aggregation).getHits();
+			final AggBean aggBean = AggBean.builder().keyAsString(name).count(hits.getTotalHits().value)
+					.type(type).build();
+			if (hits.getHits().length > 0) {
+				final List<Map<String, Object>> maps = Arrays.stream(hits.getHits())
+						.map(HitsUtils::formatValues)
+						.collect(Collectors.toList());
+				aggBean.getHits().addAll(maps);
+				
+				
+			}
+			return aggBean;
+			
+		}
 		
-		// if (aggregation instanceof InternalGeoHashGridBucket){
-		//
-		// }
-		
+		if (aggregation instanceof ParsedFilter) {
+			return getParsedFilterValue((ParsedFilter) aggregation);
+		}
+	
 		return null;
+	}
+	
+	private static AggBean getParsedFilterValue(ParsedFilter aggregation) {
+		final String parsedFilterKey = aggregation.getName();
+		final long docCount = aggregation.getDocCount();
+		final String type = aggregation.getType();
+		
+		final Aggregations aggregations = ((ParsedFilter) aggregation).getAggregations();
+		final AggBean aggBean = AggBean.builder().keyAsString(parsedFilterKey).type(type)
+				.count(docCount)
+				.build();
+		if (Objects.nonNull(aggregations)) {
+			aggBean.getAggs().addAll(getAllAggs(aggregations));
+			
+		}
+		return aggBean;
 	}
 	
 	private static AggBean getPercentileRanks(final PercentileRanks agg) {
@@ -245,7 +306,6 @@ public class AggUtils {
 			
 			log.info("percent [{}], value [{}]", percent, value);
 			aggBean.getAggs().add(AggBean.builder()
-					
 					
 					.keyAsString(percent + "")
 					.count(value)
@@ -267,7 +327,6 @@ public class AggUtils {
 			double value = entry.getValue();        // Value
 			
 			aggBean.getAggs().add(AggBean.builder()
-					
 					
 					.keyAsString(percent + "")
 					.count(value)
@@ -326,11 +385,9 @@ public class AggUtils {
 		final String rangeKey = aggregation.getName();
 		final String type = aggregation.getType();
 		
-		
-	
 		final AggBean aggBean = AggBean.builder().keyAsString(rangeKey).type(type).build();
 		
-		if (Objects.nonNull(aggregation.getBuckets())&&!aggregation.getBuckets().isEmpty()) {
+		if (Objects.nonNull(aggregation.getBuckets()) && !aggregation.getBuckets().isEmpty()) {
 			final Set<AggBean> aggBeans = aggregation.getBuckets().stream().filter(Objects::nonNull)
 					.map(AggUtils::getBucket)
 					
@@ -345,10 +402,9 @@ public class AggUtils {
 		final String significantTermsKey = aggregation.getName();
 		final String type = aggregation.getType();
 		
-	
 		final AggBean aggBean = AggBean.builder().keyAsString(significantTermsKey).type(type).build();
 		
-		if (Objects.nonNull(aggregation.getBuckets())&&!aggregation.getBuckets().isEmpty()) {
+		if (Objects.nonNull(aggregation.getBuckets()) && !aggregation.getBuckets().isEmpty()) {
 			final Set<AggBean> aggBeans = aggregation.getBuckets().stream().filter(Objects::nonNull)
 					.map(AggUtils::getBucket)
 					
@@ -363,11 +419,9 @@ public class AggUtils {
 		final String filtersKey = aggregation.getName();
 		final String type = aggregation.getType();
 		
-		
-	
 		final AggBean aggBean = AggBean.builder().keyAsString(filtersKey).type(type).build();
 		
-		if (Objects.nonNull(aggregation.getBuckets())&&!aggregation.getBuckets().isEmpty()) {
+		if (Objects.nonNull(aggregation.getBuckets()) && !aggregation.getBuckets().isEmpty()) {
 			final Set<AggBean> aggBeans = aggregation.getBuckets().stream().filter(Objects::nonNull)
 					.map(AggUtils::getBucket)
 					
@@ -382,17 +436,17 @@ public class AggUtils {
 		final String compositeAggregationKey = aggregation.getName();
 		final String type = aggregation.getType();
 		
-	
-		final AggBean aggBean = AggBean.builder().keyAsString(compositeAggregationKey).type(type).build();
+		final AggBean aggBean = AggBean.builder().keyAsString(compositeAggregationKey).type(type)
+				.build();
 		
-		if (Objects.nonNull(aggregation.getBuckets())&&!aggregation.getBuckets().isEmpty()) {
+		if (Objects.nonNull(aggregation.getBuckets()) && !aggregation.getBuckets().isEmpty()) {
 			final Set<AggBean> aggBeans = aggregation.getBuckets().stream().filter(Objects::nonNull)
 					.map(AggUtils::getBucket)
 					
 					.collect(Collectors.toSet());
 			aggBean.getAggs().addAll(aggBeans);
 		}
-	
+		
 		return aggBean;
 		
 		
@@ -403,14 +457,14 @@ public class AggUtils {
 		final String type = aggregation.getType();
 		final AggBean aggBean = AggBean.builder().keyAsString(histogramKey).type(type).build();
 		
-		if (Objects.nonNull(aggregation.getBuckets())&&!aggregation.getBuckets().isEmpty()) {
+		if (Objects.nonNull(aggregation.getBuckets()) && !aggregation.getBuckets().isEmpty()) {
 			final Set<AggBean> aggBeans = aggregation.getBuckets().stream().filter(Objects::nonNull)
 					.map(AggUtils::getBucket)
 					
 					.collect(Collectors.toSet());
 			aggBean.getAggs().addAll(aggBeans);
 		}
-	
+		
 		return aggBean;
 		
 		
@@ -595,22 +649,6 @@ public class AggUtils {
 				
 			}
 			return aggBean;
-		} else if (bucket instanceof TopHits) {
-			final String name = ((TopHits) bucket).getName();
-			final String type = ((TopHits) bucket).getType();
-			final SearchHits hits = ((TopHits) bucket).getHits();
-			final AggBean aggBean = AggBean.builder().keyAsString(name).count(hits.getTotalHits().value)
-					.type(type).build();
-			if (hits.getHits().length > 0) {
-				final List<Map<String, Object>> maps = Arrays.stream(hits.getHits())
-						.map(HitsUtils::formatValues)
-						.collect(Collectors.toList());
-				aggBean.getHits().addAll(maps);
-				
-				
-			}
-			return aggBean;
-			
 		}
 		
 		throw new RuntimeException();
@@ -640,7 +678,9 @@ public class AggUtils {
 	@AllArgsConstructor
 	@NoArgsConstructor
 	@ToString
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	public static class AggBean {
+		
 		private Object avgAsString;
 		private Object max;
 		private Object sum;
@@ -654,7 +694,9 @@ public class AggUtils {
 		private String type;
 		private GeoPintBean right;
 		private GeoPintBean left;
+		@Builder.Default
 		private List<AggBean> aggs = Lists.newArrayList();
+		@Builder.Default
 		private List<Map<String, Object>> hits = Lists.newArrayList();
 		
 	}
@@ -664,7 +706,9 @@ public class AggUtils {
 	@AllArgsConstructor
 	@NoArgsConstructor
 	@ToString
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	public static class GeoPintBean {
+		
 		private double lat;
 		private double lon;
 		private String geohash;

@@ -1,6 +1,7 @@
 package com.run.start.tools;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
@@ -128,7 +129,8 @@ public class JacksonUtil {
 	public static String bean2Json(Object obj) {
 		//允许出现单引号
 		// mapperConfig();
-		
+		mapper.setSerializationInclusion(Include.NON_EMPTY);
+		mapper.setSerializationInclusion(Include.NON_NULL);
 		//允许出现特殊字符和转义符                     ALLOW_UNESCAPED_CONTROL_CHARS
 		mapper.setSerializerProvider(new CustomSerializerProvider())
 		

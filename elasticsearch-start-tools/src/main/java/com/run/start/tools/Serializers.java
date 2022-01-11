@@ -32,7 +32,6 @@ public class Serializers extends JsonSerializer<Object> {
 		public void serialize(Object o, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
 				throws IOException, JsonProcessingException {
 			log.info("进入value为空的序列化.....");
-			System.out.println("进入value为空的序列化");
 			jsonGenerator.writeObject(o);
 		}
 	}
@@ -53,7 +52,6 @@ public class Serializers extends JsonSerializer<Object> {
 				 
 				 if (Objects.nonNull(newJsonNot)){
 					 final String s = JacksonUtil.bean2Json(newJsonNot);
-					 System.out.println(s);
 					 jsonGenerator.writeObject(JacksonUtil.readJson(s));
 					
 				 }else {

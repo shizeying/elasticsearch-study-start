@@ -42,6 +42,8 @@
          <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <fastjson.version>1.2.75</fastjson.version>
         <fontbox.version>2.0.25</fontbox.version>
+        <json-flattener.version>0.13.0</json-flattener.version>
+        <jayway-json.version>2.6.0</jayway-json.version>
     </properties>
     <modules>
         <module>elasticsearch-start-run</module>
@@ -160,6 +162,18 @@
             <artifactId>lombok</artifactId>
             <groupId>org.projectlombok</groupId>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.wnameless.json/json-flattener -->
+        <dependency>
+            <groupId>com.github.wnameless.json</groupId>
+            <artifactId>json-flattener</artifactId>
+            <version>${json-flattener.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>${jayway-json.version}</version>
+        </dependency>
+
     </dependencies>
 
 

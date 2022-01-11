@@ -72,20 +72,20 @@ public class CustomSerializerProvider extends DefaultSerializerProvider {
 	
 	@Override
 	public JsonSerializer<Object> findTypedValueSerializer(final JavaType valueType, final boolean cache, final BeanProperty property) throws JsonMappingException {
-		System.out.println("aaa5");
+		//System.out.println("aaa5");
 		return super.findTypedValueSerializer(valueType, cache, property);
 	}
 	
 	@Override
 	public JsonSerializer<Object> findKeySerializer(final JavaType keyType, final BeanProperty property) throws JsonMappingException {
-		System.out.println("aaa4");
+		//System.out.println("aaa4");
 		return super.findKeySerializer(keyType, property);
 	}
 	
 	
 	@Override
 	public JsonSerializer<?> handlePrimaryContextualization(final JsonSerializer<?> ser, final BeanProperty property) throws JsonMappingException {
-		System.err.println("aaa3");
+		//System.err.println("aaa3");
 		if (Objects.nonNull(property)){
 			System.err.println(property.getName());
 		}
