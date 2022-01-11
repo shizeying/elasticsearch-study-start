@@ -1,19 +1,10 @@
 package com.run.start;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.run.start.tools.JacksonUtil;
 import com.run.start.utils.AggUtils;
 import com.run.start.utils.AggUtils.AggBean;
 import com.run.start.utils.HitsUtils;
 import io.vavr.control.Try;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import javax.swing.text.Highlighter.Highlight;
 import org.apache.commons.io.IOUtils;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -25,16 +16,25 @@ import org.elasticsearch.script.ScriptType;
 import org.elasticsearch.script.mustache.SearchTemplateRequest;
 import org.elasticsearch.script.mustache.SearchTemplateResponse;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.global.GlobalAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.elasticsearch.search.suggest.Suggest;
+import org.elasticsearch.search.suggest.SuggestBuilder;
+import org.elasticsearch.search.suggest.SuggestBuilders;
+import org.elasticsearch.search.suggest.SuggestionBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
 class AppTests {
@@ -67,8 +67,8 @@ class AppTests {
 		for (SearchHit hit : search.getHits().getHits()) {
 			HitsUtils.formatValues(hit);
 		}
-	
 		
+		final Suggest suggest = search.getSuggest();
 		SearchTemplateRequest searchTemplateRequest = new SearchTemplateRequest();
 		
 	
@@ -89,8 +89,7 @@ class AppTests {
 				.onFailure(Throwable::printStackTrace)
 				.get();
 		final List<AggBean> allAggs = AggUtils.getAllAggs(aggregations);
-		System.out.println(JacksonUtil.bean2Json(allAggs));
-		
+	
 	}
 	private String getScript(String fileName) {
 		
