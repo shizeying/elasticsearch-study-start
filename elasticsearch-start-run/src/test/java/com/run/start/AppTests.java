@@ -72,7 +72,7 @@ class AppTests {
 		SearchTemplateRequest searchTemplateRequest = new SearchTemplateRequest();
 		
 	
-		String indexName = "congress-legislation3";
+		String indexName = "congress";
 		
 		final String scrip = getScript("tou_piao.json");
 		

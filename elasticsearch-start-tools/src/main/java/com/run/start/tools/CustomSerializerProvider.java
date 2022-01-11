@@ -86,9 +86,7 @@ public class CustomSerializerProvider extends DefaultSerializerProvider {
 	@Override
 	public JsonSerializer<?> handlePrimaryContextualization(final JsonSerializer<?> ser, final BeanProperty property) throws JsonMappingException {
 		//System.err.println("aaa3");
-		if (Objects.nonNull(property)){
-			System.err.println(property.getName());
-		}
+
 		
 		return super.handlePrimaryContextualization(ser, property);
 	}
