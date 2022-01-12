@@ -17,6 +17,9 @@
 //@EqualsAndHashCode
 //@ToString
 //@Entity
-//@Table(catalog = "term")
-//public class TermPojo extends BaseEntity {
+//@Table(catalog = "filter")
+//public class FilterPojo extends BaseEntity {
+//	 private String field;
+//	 private String type;
+//	 private
 //}
