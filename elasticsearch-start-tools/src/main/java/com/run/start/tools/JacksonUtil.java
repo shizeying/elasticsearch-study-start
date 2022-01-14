@@ -132,7 +132,7 @@ public class JacksonUtil {
 		mapper.setSerializationInclusion(Include.NON_EMPTY);
 		mapper.setSerializationInclusion(Include.NON_NULL);
 		//允许出现特殊字符和转义符                     ALLOW_UNESCAPED_CONTROL_CHARS
-		mapper.setSerializerProvider(new CustomSerializerProvider())
+		//mapper.setSerializerProvider(new CustomSerializerProvider())
 		
 		
 		;

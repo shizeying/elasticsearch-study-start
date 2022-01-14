@@ -17,6 +17,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 @ToString
 @Entity
-@Table(catalog = "suggest")
+@Table(name = "suggest")
 public class SuggestPojo extends BaseEntity {
+	private String name;
 }

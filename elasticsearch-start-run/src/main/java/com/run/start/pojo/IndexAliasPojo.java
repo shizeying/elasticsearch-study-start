@@ -23,7 +23,7 @@ import org.w3c.dom.stylesheets.LinkStyle;
 @EqualsAndHashCode
 @ToString
 @Entity
-@Table(catalog = "index_alias")
+@Table(name = "index_alias")
 public class IndexAliasPojo extends BaseEntity {
 	
 	/**
@@ -36,7 +36,7 @@ public class IndexAliasPojo extends BaseEntity {
 	 * index id
 	 */
 	private Long indexId;
-	@OneToMany
-	private List<IndexPojo> indexPojoList;
+	//@OneToMany
+	//private List<IndexPojo> indexPojoList;
 	
 }

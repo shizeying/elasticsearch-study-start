@@ -17,7 +17,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 @ToString
 @Entity
-@Table(catalog = "script")
+@Table(name = "script")
 public class ScriptPojo extends BaseEntity {
 	private String script;
 	private String name;

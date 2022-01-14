@@ -42,11 +42,11 @@ public abstract class BaseEntity {
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@CreatedDate
-	@Column(name = "create_time",updatable = false,nullable = false)
+	@Column(updatable = false,nullable = false)
 	protected LocalDate createTime;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@LastModifiedDate
-	@Column(name = "update_time", nullable = false)
+	@Column( nullable = false)
 	protected LocalDate updateTime;
 }

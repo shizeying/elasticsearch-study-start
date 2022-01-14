@@ -19,11 +19,11 @@ import lombok.ToString;
 @EqualsAndHashCode
 @ToString
 @Entity
-@Table(catalog = "index_field")
+@Table(name = "index_field")
 public class IndexFieldPojo extends BaseEntity {
 	   private String fieldName;
 		 private String type;
 		 private Long indexId;
-		 @ManyToOne
-		 private IndexPojo indexPojo;
+		 //@ManyToOne
+		 //private IndexPojo indexPojo;
 }

@@ -13,6 +13,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Getter
 @Setter
@@ -20,8 +22,10 @@ import lombok.ToString;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
+@DynamicInsert
+@DynamicUpdate
 @Entity
-@Table(catalog = "index")
+@Table(name = "es_index")
 public class IndexPojo extends BaseEntity {
 	
 	/**
@@ -36,9 +40,9 @@ public class IndexPojo extends BaseEntity {
 	 * 对应的索引权重
 	 */
 	private Double boots;
-	@ManyToOne
-	private IndexAliasPojo indexAlias;
-	@OneToMany
-	private List<IndexFieldPojo> fields;
+	//@ManyToOne
+	//private IndexAliasPojo indexAlias;
+	//@OneToMany
+	//private List<IndexFieldPojo> fields;
 	
 }
