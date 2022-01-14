@@ -103,6 +103,11 @@
 	</build>
 	<dependencies>
 		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>antlr4</artifactId>
+			<version>${antlr4.version}</version>
+		</dependency>
+		<dependency>
 			<artifactId>fontbox</artifactId>
 			<groupId>org.apache.pdfbox</groupId>
 		</dependency>

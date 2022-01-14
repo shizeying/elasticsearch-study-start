@@ -22,6 +22,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import org.antlr.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.bulk.BulkItemResponse;
@@ -195,7 +197,7 @@ class AppTests {
 	
 	public static void main(String[] args) {
 		
-		System.out.println();
+
 	}
 	
 	

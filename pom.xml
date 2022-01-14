@@ -44,6 +44,7 @@
         <fontbox.version>2.0.25</fontbox.version>
         <json-flattener.version>0.13.0</json-flattener.version>
         <jayway-json.version>2.6.0</jayway-json.version>
+        <antlr4.version>4.7.1</antlr4.version>
     </properties>
     <modules>
         <module>elasticsearch-start-run</module>
