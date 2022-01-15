@@ -82,9 +82,9 @@
                 <artifactId>hibernate-jpamodelgen</artifactId>
                 <version>${hibernate-jpamodelgen.version}</version>
             </dependency>
-
-            <!-- Guava -->
-            <dependency>
+	
+	        <!-- Guava -->
+	        <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
@@ -130,10 +130,10 @@
                 <artifactId>commons-collections4</artifactId>
                 <version>${commons-collections4.version}</version>
             </dependency>
-
-
-            <!--常见的编码，解码方法封装-->
-            <dependency>
+	
+	
+	        <!--常见的编码，解码方法封装-->
+	        <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
                 <version>${commons-codec.version}</version>
@@ -163,8 +163,8 @@
             <artifactId>lombok</artifactId>
             <groupId>org.projectlombok</groupId>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.github.wnameless.json/json-flattener -->
-        <dependency>
+	    <!-- https://mvnrepository.com/artifact/com.github.wnameless.json/json-flattener -->
+	    <dependency>
             <groupId>com.github.wnameless.json</groupId>
             <artifactId>json-flattener</artifactId>
             <version>${json-flattener.version}</version>
@@ -191,8 +191,8 @@
                     <configuration>
                         <finalName>${project.build.finalName}</finalName>
                         <fork>true</fork>
-                        <!--增加jvm参数-->
-                        <jvmArguments>-Dfile.encoding=UTF-8</jvmArguments>
+	                    <!--增加jvm参数-->
+	                    <jvmArguments>-Dfile.encoding=UTF-8</jvmArguments>
                         <excludes>
                             <exclude>
                                 <groupId>org.springframework.boot</groupId>
@@ -227,7 +227,7 @@
                         <archive>
                             <manifestEntries>
                                 <!--suppress UnresolvedMavenProperty -->
-                                <Build-Timestamp>${timestamp}</Build-Timestamp>
+	                            <Build-Timestamp>${timestamp}</Build-Timestamp>
                             </manifestEntries>
                         </archive>
                     </configuration>

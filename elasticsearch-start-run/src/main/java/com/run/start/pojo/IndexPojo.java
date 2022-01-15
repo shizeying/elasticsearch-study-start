@@ -1,26 +1,18 @@
 package com.run.start.pojo;
 
 
-import com.run.start.pojo.base.BaseEntity;
-import java.util.List;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.run.start.base.BaseEntity;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+
+import javax.persistence.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"indexAlias"})
 @ToString
 @DynamicInsert
 @DynamicUpdate
@@ -40,8 +32,12 @@ public class IndexPojo extends BaseEntity {
 	 * 对应的索引权重
 	 */
 	private Double boots;
-	//@ManyToOne
-	//private IndexAliasPojo indexAlias;
+	@ManyToOne(targetEntity = IndexAliasPojo.class)
+	@org.hibernate.annotations.ForeignKey(name ="none")
+	@JoinColumn(name = "id", nullable = false, insertable = false, updatable = false, foreignKey = @ForeignKey(name = "none",value = ConstraintMode.NO_CONSTRAINT),
+			referencedColumnName =
+					"id")
+	private IndexAliasPojo indexAlias;
 	//@OneToMany
 	//private List<IndexFieldPojo> fields;
 	

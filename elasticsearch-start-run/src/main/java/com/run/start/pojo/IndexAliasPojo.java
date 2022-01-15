@@ -1,26 +1,17 @@
 package com.run.start.pojo;
 
-import com.run.start.pojo.base.BaseEntity;
-import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import com.run.start.base.BaseEntity;
+import lombok.*;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import org.w3c.dom.stylesheets.LinkStyle;
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"indexPojoList"})
 @ToString
 @Entity
 @Table(name = "index_alias")
@@ -36,7 +27,11 @@ public class IndexAliasPojo extends BaseEntity {
 	 * index id
 	 */
 	private Long indexId;
-	//@OneToMany
-	//private List<IndexPojo> indexPojoList;
+	@OneToMany(targetEntity = IndexPojo.class)
+	@Transient
+	@JoinColumn(name = "id", nullable = false, insertable = false, updatable = false,
+			referencedColumnName =
+					"indexId")
+	private List<IndexPojo> indexPojoList;
 	
 }
