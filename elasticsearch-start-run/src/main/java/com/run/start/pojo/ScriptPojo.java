@@ -18,4 +18,5 @@ public class ScriptPojo extends BaseEntity {
 	private String script;
 	private String name;
 	private String type;
+	
 }

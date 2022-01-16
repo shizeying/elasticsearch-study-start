@@ -5,6 +5,8 @@ import com.run.start.base.BaseEntity;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
 
@@ -12,7 +14,7 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"indexAlias"})
+@EqualsAndHashCode
 @ToString
 @DynamicInsert
 @DynamicUpdate
@@ -32,11 +34,17 @@ public class IndexPojo extends BaseEntity {
 	 * 对应的索引权重
 	 */
 	private Double boots;
+	
 	@ManyToOne(targetEntity = IndexAliasPojo.class)
-	@org.hibernate.annotations.ForeignKey(name ="none")
-	@JoinColumn(name = "id", nullable = false, insertable = false, updatable = false, foreignKey = @ForeignKey(name = "none",value = ConstraintMode.NO_CONSTRAINT),
-			referencedColumnName =
-					"id")
+	@NotFound(action = NotFoundAction.IGNORE)
+	@JoinColumn(
+			 //@ManyToOne:当前表中的关联字段
+			name = "id", nullable = false, insertable = false, updatable = false, foreignKey = @ForeignKey(name = "none",value = ConstraintMode.NO_CONSTRAINT),
+			//@ManyToOne:关联表中的关联字段
+			referencedColumnName = "indexId"
+	)
+	@ToString.Exclude
+	@EqualsAndHashCode.Exclude
 	private IndexAliasPojo indexAlias;
 	//@OneToMany
 	//private List<IndexFieldPojo> fields;

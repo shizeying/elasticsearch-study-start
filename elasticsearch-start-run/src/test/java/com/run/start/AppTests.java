@@ -3,6 +3,7 @@ package com.run.start;
 import com.github.wnameless.json.flattener.JsonFlattener;
 import com.google.common.collect.Maps;
 import com.run.start.pojo.IndexAliasPojo;
+import com.run.start.pojo.IndexPojo;
 import com.run.start.repository.IndexAliasPojoRepository;
 import com.run.start.repository.IndexPojoRepository;
 import com.run.start.tools.JacksonUtil;
@@ -41,6 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -166,6 +168,7 @@ class AppTests {
 	
 	@Autowired
 	private IndexAliasPojoRepository indexAliasPojoRepository;
+	@Transactional
 	@Test
 	void  setIndexAliasPojoRepository(){
 		final IndexAliasPojo indexAliasPojo = indexAliasPojoRepository.findAll().get(0);
@@ -174,8 +177,12 @@ class AppTests {
 	}
 	@Autowired
 	private IndexPojoRepository indexPojoRepository;
-	
-	void setIndexPojoRepository(){}
+	@Transactional
+	@Test
+	void setIndexPojoRepository(){
+		final IndexPojo indexPojo = indexPojoRepository.findAll().get(0);
+		System.out.println(indexPojo.getIndexAlias());
+	}
 	
 	
 }
