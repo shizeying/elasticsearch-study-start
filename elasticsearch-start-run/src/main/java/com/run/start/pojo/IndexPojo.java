@@ -38,8 +38,9 @@ public class IndexPojo extends BaseEntity {
 	@ManyToOne(targetEntity = IndexAliasPojo.class)
 	@NotFound(action = NotFoundAction.IGNORE)
 	@JoinColumn(
-			 //@ManyToOne:当前表中的关联字段
-			name = "id", nullable = false, insertable = false, updatable = false, foreignKey = @ForeignKey(name = "none",value = ConstraintMode.NO_CONSTRAINT),
+			//@ManyToOne:当前表中的关联字段
+			name = "id", updatable = false,
+			foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT),
 			//@ManyToOne:关联表中的关联字段
 			referencedColumnName = "indexId"
 	)
