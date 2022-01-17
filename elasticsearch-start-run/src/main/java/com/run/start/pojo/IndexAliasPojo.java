@@ -38,7 +38,7 @@ public class IndexAliasPojo extends BaseEntity implements Serializable {
 	@JoinColumn(
 			//@OneToMany 关联表中的关联字段
 			name = "id",
-			updatable = false,
+			updatable = false,insertable = false,
 			//@OneToMany 当前表中的关联字段
 			referencedColumnName = "indexId"
 			, foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT)

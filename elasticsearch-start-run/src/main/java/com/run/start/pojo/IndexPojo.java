@@ -39,7 +39,7 @@ public class IndexPojo extends BaseEntity {
 	@NotFound(action = NotFoundAction.IGNORE)
 	@JoinColumn(
 			//@ManyToOne:当前表中的关联字段
-			name = "id", updatable = false,
+			name = "id",updatable = false,insertable = false,
 			foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT),
 			//@ManyToOne:关联表中的关联字段
 			referencedColumnName = "indexId"
