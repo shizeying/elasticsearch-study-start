@@ -9,6 +9,7 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -34,12 +35,13 @@ public class IndexPojo extends BaseEntity {
 	 * 对应的索引权重
 	 */
 	private Double boots;
+	private Long indexFieldId;
 	
 	@ManyToOne(targetEntity = IndexAliasPojo.class)
 	@NotFound(action = NotFoundAction.IGNORE)
 	@JoinColumn(
 			//@ManyToOne:当前表中的关联字段
-			name = "id",updatable = false,insertable = false,
+			name = "id", updatable = false, insertable = false,
 			foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT),
 			//@ManyToOne:关联表中的关联字段
 			referencedColumnName = "indexId"
@@ -47,7 +49,16 @@ public class IndexPojo extends BaseEntity {
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
 	private IndexAliasPojo indexAlias;
-	//@OneToMany
-	//private List<IndexFieldPojo> fields;
+	@ManyToMany(targetEntity = IndexFieldPojo.class)
+	@JoinColumn(
+			//@ManyToOne:当前表中的关联字段
+			name = "id", updatable = false, insertable = false,
+			foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT),
+			//@ManyToOne:关联表中的关联字段
+			referencedColumnName = "indexId"
+	)
+	@ToString.Exclude
+	@EqualsAndHashCode.Exclude
+	private List<IndexFieldPojo> fields;
 	
 }
