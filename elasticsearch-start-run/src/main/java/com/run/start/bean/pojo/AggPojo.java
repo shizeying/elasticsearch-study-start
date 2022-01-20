@@ -2,29 +2,16 @@ package com.run.start.bean.pojo;
 
 import com.run.start.base.BaseEntity;
 import com.run.start.constant.AggEnum;
+import com.run.start.constant.ValueTypeEnum;
 import com.run.start.convert.AggEnumConvert;
 import com.run.start.convert.ListLongConvert;
+import com.run.start.convert.ValueTypeEnumConvert;
+import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.ConstraintMode;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Builder
 @Getter
@@ -46,6 +33,8 @@ public class AggPojo extends BaseEntity implements Serializable {
 	@Column(nullable = false)
 	private String fieldName;
 	private Integer size;
+	@Convert(converter = ValueTypeEnumConvert.class)
+	private ValueTypeEnum ValueType;
 	@Convert(converter = ListLongConvert.class)
 	private List<Long> aggIds;
 	@Column(nullable = false)
@@ -59,8 +48,8 @@ public class AggPojo extends BaseEntity implements Serializable {
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
 	private IndexPojo indexPojo;
-	
-	@OneToOne(targetEntity = )
-	private ScriptPojo script;
+	//
+	// @OneToOne(targetEntity = )
+	// private ScriptPojo script;
 	
 }

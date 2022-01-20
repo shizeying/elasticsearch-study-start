@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public enum AggEnum {
+	global,
 	terms,
 	filters,
 	missing,

@@ -1,11 +1,18 @@
 package com.run.start.bean.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
-import javax.validation.constraints.NotNull;
-import lombok.Data;
 
+@AllArgsConstructor
 @Data
+@NoArgsConstructor
+@ToString
 public class IndexAliasDto implements Serializable {
 	
 	private  Long id;

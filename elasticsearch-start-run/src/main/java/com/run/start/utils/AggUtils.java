@@ -2,23 +2,18 @@ package com.run.start.utils;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.Lists;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import com.run.start.bean.rsp.AggRsp;
+import com.run.start.constant.ValueTypeEnum;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.common.geo.GeoPoint;
 import org.elasticsearch.join.aggregations.Children;
+import org.elasticsearch.script.Script;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.aggregations.Aggregation;
+import org.elasticsearch.search.aggregations.AggregationBuilder;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.adjacency.AdjacencyMatrix;
 import org.elasticsearch.search.aggregations.bucket.composite.CompositeAggregation;
@@ -35,27 +30,15 @@ import org.elasticsearch.search.aggregations.bucket.nested.Nested;
 import org.elasticsearch.search.aggregations.bucket.range.InternalDateRange;
 import org.elasticsearch.search.aggregations.bucket.range.InternalRange;
 import org.elasticsearch.search.aggregations.bucket.range.Range;
-import org.elasticsearch.search.aggregations.bucket.terms.InternalRareTerms;
-import org.elasticsearch.search.aggregations.bucket.terms.LongTerms;
-import org.elasticsearch.search.aggregations.bucket.terms.SignificantTerms;
-import org.elasticsearch.search.aggregations.bucket.terms.StringTerms;
-import org.elasticsearch.search.aggregations.bucket.terms.Terms;
+import org.elasticsearch.search.aggregations.bucket.terms.*;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms.Bucket;
-import org.elasticsearch.search.aggregations.metrics.Avg;
-import org.elasticsearch.search.aggregations.metrics.Cardinality;
-import org.elasticsearch.search.aggregations.metrics.ExtendedStats;
-import org.elasticsearch.search.aggregations.metrics.GeoBounds;
-import org.elasticsearch.search.aggregations.metrics.Max;
-import org.elasticsearch.search.aggregations.metrics.Min;
-import org.elasticsearch.search.aggregations.metrics.Percentile;
-import org.elasticsearch.search.aggregations.metrics.PercentileRanks;
-import org.elasticsearch.search.aggregations.metrics.Percentiles;
-import org.elasticsearch.search.aggregations.metrics.ScriptedMetric;
-import org.elasticsearch.search.aggregations.metrics.Stats;
-import org.elasticsearch.search.aggregations.metrics.Sum;
-import org.elasticsearch.search.aggregations.metrics.TopHits;
-import org.elasticsearch.search.aggregations.metrics.ValueCount;
+import org.elasticsearch.search.aggregations.metrics.*;
+import org.elasticsearch.search.aggregations.support.ValueType;
 import org.springframework.util.CollectionUtils;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class AggUtils {
@@ -714,4 +697,245 @@ public class AggUtils {
 		private String geohash;
 	}
 	
+	public static ValueType getValueTypeEnum(ValueTypeEnum typeEnum) {
+		
+		switch (typeEnum) {
+			case STRING:
+				return ValueType.STRING;
+			case LONG:
+				return ValueType.LONG;
+			case DOUBLE:
+				return ValueType.DOUBLE;
+			case NUMBER:
+				return ValueType.NUMBER;
+			case DATE:
+				return ValueType.DATE;
+			case IP:
+				return ValueType.IP;
+			case NUMERIC:
+				return ValueType.NUMERIC;
+			case GEOPOINT:
+				return ValueType.GEOPOINT;
+			case BOOLEAN:
+				return ValueType.BOOLEAN;
+			case RANGE:
+				return ValueType.RANGE;
+			default:
+				throw new RuntimeException();
+		}
+	}
+	
+	private AggregationBuilder get(AggRsp dto) {
+		switch (dto.getType()) {
+			case global:
+				return AggregationBuilders
+						.global(dto.getAggName());
+			case terms:
+			
+			case filters:
+			case missing:
+			case Nested:
+			case children:
+			case significantTerms:
+			case Range:
+			case histogram:
+			case dateHistogram:
+			case geoDistance:
+			case min:
+				final MinAggregationBuilder min = AggregationBuilders.min(dto.getAggName()).field(dto.getFieldName());
+				if (StringUtils.isNoneBlank(dto.getScript())) {
+					min.script(new Script(dto.getScript()));
+				}
+				if (Objects.nonNull(dto.getMissing())) {
+					min.missing(dto.getMissing());
+				}
+				if (StringUtils.isNotBlank(dto.getFormat())) {
+					min.format(dto.getFormat());
+				}
+				if (Objects.nonNull(dto.getValueType())) {
+					min.userValueTypeHint(getValueTypeEnum(dto.getValueType()));
+				}
+				return min;
+			
+			case max:
+				final MaxAggregationBuilder max = AggregationBuilders.max(dto.getAggName()).field(dto.getFieldName());
+				if (StringUtils.isNotBlank(dto.getFormat())) {
+					max.format(dto.getFormat());
+				}
+				if (Objects.nonNull(dto.getMissing())) {
+					max.missing(dto.getMissing());
+				}
+				if (StringUtils.isNoneBlank(dto.getScript())) {
+					max.script(new Script(dto.getScript()));
+				}
+				if (Objects.nonNull(dto.getValueType())) {
+					max.userValueTypeHint(getValueTypeEnum(dto.getValueType()));
+				}
+				return max;
+			case sum:
+				final SumAggregationBuilder sum = AggregationBuilders
+						.sum(dto.getAggName()).field(dto.getFieldName());
+				if (StringUtils.isNotBlank(dto.getFormat())) {
+					sum.format(dto.getFormat());
+				}
+				if (Objects.nonNull(dto.getMissing())) {
+					sum.missing(dto.getMissing());
+				}
+				if (StringUtils.isNoneBlank(dto.getScript())) {
+					sum.script(new Script(dto.getScript()));
+				}
+				if (Objects.nonNull(dto.getValueType())) {
+					sum.userValueTypeHint(getValueTypeEnum(dto.getValueType()));
+				}
+				return max;
+			case avg:
+				final AvgAggregationBuilder avg = AggregationBuilders
+						.avg(dto.getAggName()).field(dto.getFieldName());
+				if (StringUtils.isNotBlank(dto.getFormat())) {
+					max.format(dto.getFormat());
+				}
+				if (Objects.nonNull(dto.getMissing())) {
+					max.missing(dto.getMissing());
+				}
+				if (StringUtils.isNoneBlank(dto.getScript())) {
+					max.script(new Script(dto.getScript()));
+				}
+				if (Objects.nonNull(dto.getValueType())) {
+					avg.userValueTypeHint(getValueTypeEnum(dto.getValueType()));
+				}
+				if (Objects.nonNull(dto.getValueType())) {
+					avg.userValueTypeHint(getValueTypeEnum(dto.getValueType()));
+				}
+				return max;
+			case stats:
+				final StatsAggregationBuilder stats = AggregationBuilders
+						.stats(dto.getAggName()).field(dto.getFieldName());
+				if (StringUtils.isNotBlank(dto.getFormat())) {
+					max.format(dto.getFormat());
+				}
+				if (Objects.nonNull(dto.getMissing())) {
+					max.missing(dto.getMissing());
+				}
+				if (StringUtils.isNoneBlank(dto.getScript())) {
+					max.script(new Script(dto.getScript()));
+				}
+				if (Objects.nonNull(dto.getValueType())) {
+					max.userValueTypeHint(getValueTypeEnum(dto.getValueType()));
+				}
+				if (Objects.nonNull(dto.getValueType())) {
+					max.userValueTypeHint(getValueTypeEnum(dto.getValueType()));
+				}
+				return max;
+			case extendedStats:
+				final ExtendedStatsAggregationBuilder extendedStatsAggregationBuilder = AggregationBuilders
+						.extendedStats(dto.getAggName()).field(dto.getFieldName());
+				if (StringUtils.isNotBlank(dto.getFormat())) {
+					extendedStatsAggregationBuilder.format(dto.getFormat());
+				}
+				if (Objects.nonNull(dto.getMissing())) {
+					extendedStatsAggregationBuilder.missing(dto.getMissing());
+				}
+				if (StringUtils.isNoneBlank(dto.getScript())) {
+					extendedStatsAggregationBuilder.script(new Script(dto.getScript()));
+				}
+				if (Objects.nonNull(dto.getValueType())) {
+					extendedStatsAggregationBuilder.userValueTypeHint(getValueTypeEnum(dto.getValueType()));
+				}
+				return extendedStatsAggregationBuilder;
+			case count:
+				final ValueCountAggregationBuilder count = AggregationBuilders.count(dto.getAggName()).field(dto.getFieldName());
+				if (StringUtils.isNotBlank(dto.getFormat())) {
+					count.format(dto.getFormat());
+				}
+				if (Objects.nonNull(dto.getMissing())) {
+					count.missing(dto.getMissing());
+				}
+				if (StringUtils.isNoneBlank(dto.getScript())) {
+					count.script(new Script(dto.getScript()));
+				}
+				if (Objects.nonNull(dto.getValueType())) {
+					count.userValueTypeHint(getValueTypeEnum(dto.getValueType()));
+				}
+				return count;
+			
+			case percentiles:
+				return AggregationBuilders.percentiles(dto.getAggName()).field(dto.getFieldName());
+			case percentileRanks:
+				final double[] values = dto.getValues().stream().filter(Objects::nonNull).mapToDouble(Double::doubleValue).toArray();
+				if (values.length > 0) {
+					final PercentileRanksAggregationBuilder ranksAggregationBuilder = AggregationBuilders.percentileRanks(dto.getAggName(), values).field(dto.getFieldName()).keyed(dto.isKeyed());
+					if (Objects.nonNull(dto.getMissing())) {
+						ranksAggregationBuilder.missing(dto.getMissing());
+					}
+					if (StringUtils.isNoneBlank(dto.getScript())) {
+						ranksAggregationBuilder.script(new Script(dto.getScript()));
+						
+					}
+					if (StringUtils.isNotBlank(dto.getFormat())) {
+						ranksAggregationBuilder.format(dto.getFormat());
+					}
+					if (Objects.nonNull(dto.getValueType())) {
+						ranksAggregationBuilder.userValueTypeHint(getValueTypeEnum(dto.getValueType()));
+					}
+					return ranksAggregationBuilder;
+				} else {
+					throw new RuntimeException("values不能为空");
+				}
+			
+			case cardinality:
+				final CardinalityAggregationBuilder cardinalityAggregationBuilder = AggregationBuilders.cardinality(dto.getAggName()).field(dto.getFieldName());
+				if (Objects.nonNull(dto.getMissing())) {
+					cardinalityAggregationBuilder.missing(dto.getMissing());
+				}
+				if (StringUtils.isNoneBlank(dto.getScript())) {
+					cardinalityAggregationBuilder.script(new Script(dto.getScript()));
+				}
+				if (StringUtils.isNotBlank(dto.getFormat())) {
+					cardinalityAggregationBuilder.format(dto.getFormat());
+				}
+				if (Objects.nonNull(dto.getValueType())) {
+					cardinalityAggregationBuilder.userValueTypeHint(getValueTypeEnum(dto.getValueType()));
+				}
+				return cardinalityAggregationBuilder;
+			case geoBounds:
+				final GeoBoundsAggregationBuilder aggregationBuilder = new GeoBoundsAggregationBuilder(dto.getAggName());
+				aggregationBuilder.field(dto.getFieldName());
+				aggregationBuilder.wrapLongitude(true);
+				if (Objects.nonNull(dto.getMissing())) {
+					aggregationBuilder.missing(dto.getMissing());
+				}
+				if (StringUtils.isNoneBlank(dto.getScript())) {
+					aggregationBuilder.script(new Script(dto.getScript()));
+				}
+				if (StringUtils.isNotBlank(dto.getFormat())) {
+					aggregationBuilder.format(dto.getFormat());
+				}
+				if (Objects.nonNull(dto.getValueType())) {
+					aggregationBuilder.userValueTypeHint(getValueTypeEnum(dto.getValueType()));
+				}
+				
+				return aggregationBuilder;
+			case topHits:
+				return AggregationBuilders
+						.topHits(dto.getAggName())
+						.explain(dto.isExplain())
+						.size(dto.getSize())
+						.from(dto.getFrom())
+						
+						;
+			case scriptedMetric:
+				// return  AggregationBuilders
+				// 		.scriptedMetric("agg")
+				// 		.initScript(new Script("state.heights = []"))
+				// 		.mapScript(new Script("state.heights.add(doc.gender.value == 'male' ? doc.height.value : -1.0 * doc.height.value)"))
+				// 		.combineScript(new Script("double heights_sum = 0.0; for (t in state.heights) { heights_sum += t } return heights_sum"))
+				// 		.reduceScript(new Script("double heights_sum = 0.0; for (a in states) { heights_sum += a } return heights_sum"));
+			
+			default:
+				throw new RuntimeException();
+			
+		}
+		
+		
+	}
 }

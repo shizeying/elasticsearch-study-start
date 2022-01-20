@@ -1,16 +1,18 @@
 package com.run.start.bean.dto;
 
 import com.run.start.constant.AggEnum;
-import com.run.start.convert.AggEnumConvert;
-import java.io.Serializable;
-import java.util.List;
-import javax.persistence.Convert;
+import com.run.start.constant.ValueTypeEnum;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.io.Serializable;
+import java.util.List;
+
 @AllArgsConstructor
-@Getter
+@Data
+@NoArgsConstructor
 @ToString
 public class AggDto implements Serializable {
 	
@@ -21,4 +23,5 @@ public class AggDto implements Serializable {
 	private Integer size;
 	private List<Long> aggIds;
 	private IndexDto indexPojo;
+	private ValueTypeEnum ValueType;
 }
