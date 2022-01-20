@@ -1,4 +1,4 @@
-package com.run.start.pojo;
+package com.run.start.bean.pojo;
 
 import com.google.common.collect.Lists;
 import com.run.start.base.BaseEntity;
@@ -28,22 +28,19 @@ public class IndexAliasPojo extends BaseEntity implements Serializable {
 	 * index 所属搜索别名
 	 */
 	@NotNull
+	@Column(nullable = false)
 	private String indexAlias;
-	
-	/**
-	 * index id
-	 */
-	private Long indexId;
+
 	@OneToMany(targetEntity = IndexPojo.class,fetch=FetchType.LAZY)
 	//如果不需要索引,那么此注解是不去能去掉的:	@org.springframework.data.annotation.Transient @org.hibernate.annotations.ForeignKey(name = "none")
 	@org.hibernate.annotations.ForeignKey(name = "none")
 	@org.springframework.data.annotation.Transient
 	@JoinColumn(
 			//@OneToMany 关联表中的关联字段
-			name = "id",
+			name = "indexAliasId",
 			updatable = false,insertable = false,
 			//@OneToMany 当前表中的关联字段
-			referencedColumnName = "indexId"
+			referencedColumnName = "id"
 			, foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT)
 	)
 	@ToString.Exclude

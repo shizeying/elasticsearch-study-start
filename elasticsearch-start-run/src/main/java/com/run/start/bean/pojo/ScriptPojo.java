@@ -1,9 +1,7 @@
-package com.run.start.pojo;
+package com.run.start.bean.pojo;
 
 import com.run.start.base.BaseEntity;
 import lombok.*;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -15,13 +13,19 @@ import javax.persistence.*;
 @EqualsAndHashCode
 @ToString
 @Entity
-@Table(name = "suggest")
+@Table(name = "script")
 @EntityListeners({AuditingEntityListener.class})
-public class SuggestPojo extends BaseEntity {
+public class ScriptPojo extends BaseEntity {
+	@Column(nullable = false)
+	private String script;
+	@Column(nullable = false)
 	private String name;
+	@Column(nullable = false)
+	private String type;
+	@Column(nullable = false)
 	private Long indexId;
+	private Long aggId;
 	@ManyToOne(targetEntity = IndexPojo.class,fetch=FetchType.LAZY)
-	@NotFound(action = NotFoundAction.IGNORE)
 	@JoinColumn(
 			//@ManyToOne:当前表中的关联字段
 			name = "indexId", updatable = false, insertable = false, foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT),
@@ -30,4 +34,5 @@ public class SuggestPojo extends BaseEntity {
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
 	private IndexPojo indexPojo;
+	
 }

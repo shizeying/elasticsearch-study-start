@@ -2,8 +2,8 @@ package com.run.start;
 
 import com.github.wnameless.json.flattener.JsonFlattener;
 import com.google.common.collect.Maps;
-import com.run.start.pojo.IndexAliasPojo;
-import com.run.start.pojo.IndexPojo;
+import com.run.start.bean.pojo.IndexAliasPojo;
+import com.run.start.bean.pojo.IndexPojo;
 import com.run.start.repository.IndexAliasPojoRepository;
 import com.run.start.repository.IndexPojoRepository;
 import com.run.start.tools.JacksonUtil;
@@ -172,7 +172,7 @@ class AppTests {
 	@Test
 	void  setIndexAliasPojoRepository(){
 		final IndexAliasPojo indexAliasPojo = indexAliasPojoRepository.findAll().get(0);
-		System.out.println(indexAliasPojo.getIndexPojoList());
+		System.err.println(indexAliasPojo.getIndexPojoList());
 		
 	}
 	@Autowired

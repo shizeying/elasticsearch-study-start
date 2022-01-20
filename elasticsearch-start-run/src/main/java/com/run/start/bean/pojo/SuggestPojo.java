@@ -1,14 +1,10 @@
-package com.run.start.pojo;
-
+package com.run.start.bean.pojo;
 
 import com.run.start.base.BaseEntity;
 import lombok.*;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Getter
 @Setter
@@ -17,16 +13,14 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @ToString
 @Entity
-@Table(name = "index_field")
+@Table(name = "suggest")
 @EntityListeners({AuditingEntityListener.class})
-public class IndexFieldPojo extends BaseEntity implements Serializable {
-	
-	private static final long serialVersionUID = 1L;
-	private String fieldName;
-	private String type;
+public class SuggestPojo extends BaseEntity {
+	@Column(nullable = false)
+	private String name;
+	@Column(nullable = false)
 	private Long indexId;
 	@ManyToOne(targetEntity = IndexPojo.class,fetch=FetchType.LAZY)
-	@NotFound(action = NotFoundAction.IGNORE)
 	@JoinColumn(
 			//@ManyToOne:当前表中的关联字段
 			name = "indexId", updatable = false, insertable = false, foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT),
@@ -35,5 +29,4 @@ public class IndexFieldPojo extends BaseEntity implements Serializable {
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
 	private IndexPojo indexPojo;
-	
 }
