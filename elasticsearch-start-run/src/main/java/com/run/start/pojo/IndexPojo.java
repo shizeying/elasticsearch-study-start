@@ -23,7 +23,7 @@ import java.util.List;
 @DynamicUpdate
 @Entity
 @Table(name = "es_index")
-public class IndexPojo extends  BaseEntity implements Serializable {
+public class IndexPojo extends BaseEntity implements Serializable {
 	
 	/**
 	 * 索引名称
@@ -38,7 +38,7 @@ public class IndexPojo extends  BaseEntity implements Serializable {
 	 */
 	private Double boots;
 	
-	@ManyToOne(targetEntity = IndexAliasPojo.class)
+	@ManyToOne(targetEntity = IndexAliasPojo.class,fetch=FetchType.LAZY)
 	//@NotFound(action = NotFoundAction.IGNORE)
 	@JoinColumn(
 			//@ManyToOne:当前表中的关联字段
@@ -51,18 +51,46 @@ public class IndexPojo extends  BaseEntity implements Serializable {
 	@EqualsAndHashCode.Exclude
 	private IndexAliasPojo indexAlias;
 	
-	@OneToMany(targetEntity = IndexFieldPojo.class)
+	@OneToMany(targetEntity = IndexFieldPojo.class,fetch=FetchType.LAZY)
 	//如果不需要索引,那么此注解是不去能去掉的:	@org.springframework.data.annotation.Transient @org.hibernate.annotations.ForeignKey(name = "none")
 	@org.hibernate.annotations.ForeignKey(name = "none")
 	@org.springframework.data.annotation.Transient
 	@JoinColumn(
 			//@OneToMany 关联表中的关联字段
 			name = "indexId",
-			updatable = false,insertable = false,
+			updatable = false, insertable = false,
 			//@OneToMany 当前表中的关联字段
 			referencedColumnName = "id"
 			, foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT)
 	)
-	private List<IndexFieldPojo> fields= Lists.newLinkedList();;
+	private List<IndexFieldPojo> fields = Lists.newLinkedList();
+	
+	@OneToMany(targetEntity = ScriptPojo.class,fetch=FetchType.LAZY)
+	//如果不需要索引,那么此注解是不去能去掉的:	@org.springframework.data.annotation.Transient @org.hibernate.annotations.ForeignKey(name = "none")
+	@org.hibernate.annotations.ForeignKey(name = "none")
+	@org.springframework.data.annotation.Transient
+	@JoinColumn(
+			//@OneToMany 关联表中的关联字段
+			name = "indexId",
+			updatable = false, insertable = false,
+			//@OneToMany 当前表中的关联字段
+			referencedColumnName = "id"
+			, foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT)
+	)
+	private List<ScriptPojo> scripts = Lists.newLinkedList();
+	@OneToMany(targetEntity = SuggestPojo.class,fetch=FetchType.LAZY)
+	//如果不需要索引,那么此注解是不去能去掉的:	@org.springframework.data.annotation.Transient @org.hibernate.annotations.ForeignKey(name = "none")
+	@org.hibernate.annotations.ForeignKey(name = "none")
+	@org.springframework.data.annotation.Transient
+	@JoinColumn(
+			//@OneToMany 关联表中的关联字段
+			name = "indexId",
+			updatable = false, insertable = false,
+			//@OneToMany 当前表中的关联字段
+			referencedColumnName = "id"
+			, foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT)
+	)
+	private List<SuggestPojo> suggests = Lists.newLinkedList();
+	;
 	
 }

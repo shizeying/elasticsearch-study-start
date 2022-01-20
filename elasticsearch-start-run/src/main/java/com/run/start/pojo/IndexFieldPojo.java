@@ -23,7 +23,7 @@ public class IndexFieldPojo extends BaseEntity implements Serializable {
 	private String fieldName;
 	private String type;
 	private Long indexId;
-	@ManyToOne(targetEntity = IndexPojo.class)
+	@ManyToOne(targetEntity = IndexPojo.class,fetch=FetchType.LAZY)
 	@NotFound(action = NotFoundAction.IGNORE)
 	@JoinColumn(
 			//@ManyToOne:当前表中的关联字段

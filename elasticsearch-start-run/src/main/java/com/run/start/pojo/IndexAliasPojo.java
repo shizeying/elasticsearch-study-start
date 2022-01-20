@@ -31,7 +31,7 @@ public class IndexAliasPojo extends BaseEntity implements Serializable {
 	 * index id
 	 */
 	private Long indexId;
-	@OneToMany(targetEntity = IndexPojo.class)
+	@OneToMany(targetEntity = IndexPojo.class,fetch=FetchType.LAZY)
 	//如果不需要索引,那么此注解是不去能去掉的:	@org.springframework.data.annotation.Transient @org.hibernate.annotations.ForeignKey(name = "none")
 	@org.hibernate.annotations.ForeignKey(name = "none")
 	@org.springframework.data.annotation.Transient
