@@ -4,6 +4,7 @@ import com.run.start.base.BaseEntity;
 import lombok.*;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
@@ -15,6 +16,7 @@ import javax.persistence.*;
 @ToString
 @Entity
 @Table(name = "suggest")
+@EntityListeners({AuditingEntityListener.class})
 public class SuggestPojo extends BaseEntity {
 	private String name;
 	private Long indexId;

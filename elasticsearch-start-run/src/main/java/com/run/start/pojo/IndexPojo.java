@@ -8,6 +8,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -23,6 +24,7 @@ import java.util.List;
 @DynamicUpdate
 @Entity
 @Table(name = "es_index")
+@EntityListeners({AuditingEntityListener.class})
 public class IndexPojo extends BaseEntity implements Serializable {
 	
 	/**

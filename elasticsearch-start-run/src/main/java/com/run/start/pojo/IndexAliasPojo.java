@@ -3,12 +3,14 @@ package com.run.start.pojo;
 import com.google.common.collect.Lists;
 import com.run.start.base.BaseEntity;
 import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
@@ -17,6 +19,7 @@ import java.util.List;
 @ToString
 @Entity
 @Table(name = "index_alias")
+@EntityListeners({AuditingEntityListener.class})
 public class IndexAliasPojo extends BaseEntity implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
