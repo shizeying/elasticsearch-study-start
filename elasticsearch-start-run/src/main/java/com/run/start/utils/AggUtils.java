@@ -8,6 +8,7 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.common.geo.GeoPoint;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.join.aggregations.Children;
 import org.elasticsearch.script.Script;
 import org.elasticsearch.search.SearchHits;
@@ -731,8 +732,24 @@ public class AggUtils {
 				return AggregationBuilders
 						.global(dto.getAggName());
 			case terms:
-			
+				final TermsAggregationBuilder termsAggregationBuilder = AggregationBuilders.terms(dto.getAggName()).field(dto.getFieldName());
+				if (StringUtils.isNoneBlank(dto.getScript())) {
+					termsAggregationBuilder.script(new Script(dto.getScript()));
+				}
+				if (Objects.nonNull(dto.getMissing())) {
+					termsAggregationBuilder.missing(dto.getMissing());
+				}
+				if (StringUtils.isNotBlank(dto.getFormat())) {
+					termsAggregationBuilder.format(dto.getFormat());
+				}
+				if (Objects.nonNull(dto.getValueType())) {
+					termsAggregationBuilder.userValueTypeHint(getValueTypeEnum(dto.getValueType()));
+				}
+				return termsAggregationBuilder;
 			case filters:
+				AggregationBuilders.filter(dto.getAggName(),)
+				AggregationBuilders
+						.filter("agg", QueryBuilders.termQuery("gender", "male"));
 			case missing:
 			case Nested:
 			case children:

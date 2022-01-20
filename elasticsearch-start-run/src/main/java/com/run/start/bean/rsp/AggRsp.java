@@ -19,4 +19,5 @@ public class AggRsp extends AggDto {
 	private boolean explain=false;
 	private int size=1;
 	private int from=10;
+	private 
 }
