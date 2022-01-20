@@ -181,7 +181,7 @@ class AppTests {
 	@Test
 	void setIndexPojoRepository(){
 		final IndexPojo indexPojo = indexPojoRepository.findAll().get(0);
-		System.out.println(indexPojo.getIndexFieldPojos());
+		System.out.println(indexPojo.getFields());
 	}
 	
 	

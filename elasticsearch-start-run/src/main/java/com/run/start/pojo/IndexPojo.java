@@ -1,6 +1,7 @@
 package com.run.start.pojo;
 
 
+import com.google.common.collect.Lists;
 import com.run.start.base.BaseEntity;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Getter
@@ -21,7 +23,7 @@ import java.util.List;
 @DynamicUpdate
 @Entity
 @Table(name = "es_index")
-public class IndexPojo extends BaseEntity {
+public class IndexPojo extends  BaseEntity implements Serializable {
 	
 	/**
 	 * 索引名称
@@ -35,10 +37,9 @@ public class IndexPojo extends BaseEntity {
 	 * 对应的索引权重
 	 */
 	private Double boots;
-	private Long indexFieldId;
 	
 	@ManyToOne(targetEntity = IndexAliasPojo.class)
-	@NotFound(action = NotFoundAction.IGNORE)
+	//@NotFound(action = NotFoundAction.IGNORE)
 	@JoinColumn(
 			//@ManyToOne:当前表中的关联字段
 			name = "id", updatable = false, insertable = false,
@@ -49,16 +50,19 @@ public class IndexPojo extends BaseEntity {
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
 	private IndexAliasPojo indexAlias;
-	@ManyToMany(targetEntity = IndexFieldPojo.class)
+	
+	@OneToMany(targetEntity = IndexFieldPojo.class)
+	//如果不需要索引,那么此注解是不去能去掉的:	@org.springframework.data.annotation.Transient @org.hibernate.annotations.ForeignKey(name = "none")
+	@org.hibernate.annotations.ForeignKey(name = "none")
+	@org.springframework.data.annotation.Transient
 	@JoinColumn(
-			//@ManyToOne:当前表中的关联字段
-			name = "id", updatable = false, insertable = false,
-			foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT),
-			//@ManyToOne:关联表中的关联字段
-			referencedColumnName = "indexId"
+			//@OneToMany 关联表中的关联字段
+			name = "indexId",
+			updatable = false,insertable = false,
+			//@OneToMany 当前表中的关联字段
+			referencedColumnName = "id"
+			, foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT)
 	)
-	@ToString.Exclude
-	@EqualsAndHashCode.Exclude
-	private List<IndexFieldPojo> fields;
+	private List<IndexFieldPojo> fields= Lists.newLinkedList();;
 	
 }

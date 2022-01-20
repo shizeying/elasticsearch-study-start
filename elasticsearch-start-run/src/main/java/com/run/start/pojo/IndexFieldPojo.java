@@ -3,10 +3,11 @@ package com.run.start.pojo;
 
 import com.run.start.base.BaseEntity;
 import lombok.*;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 @Getter
 @Setter
@@ -22,17 +23,15 @@ public class IndexFieldPojo extends BaseEntity implements Serializable {
 	private String fieldName;
 	private String type;
 	private Long indexId;
-	//@ManyToOne
-	//private IndexPojo indexPojo;
-	@ManyToMany(targetEntity = IndexPojo.class)
+	@ManyToOne(targetEntity = IndexPojo.class)
+	@NotFound(action = NotFoundAction.IGNORE)
 	@JoinColumn(
 			//@ManyToOne:当前表中的关联字段
-			name = "indexId",updatable = false,insertable = false,
-			foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT),
+			name = "indexId", updatable = false, insertable = false, foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT),
 			//@ManyToOne:关联表中的关联字段
-			referencedColumnName = "id"
-	)
+			referencedColumnName = "id")
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
-	private List<IndexPojo> indexPojoList;
+	private IndexPojo indexPojo;
+	
 }
