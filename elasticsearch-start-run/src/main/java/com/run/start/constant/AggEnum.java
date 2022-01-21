@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 public enum AggEnum {
 	global,
 	terms,
+	filter,
+	//不支持
 	filters,
 	missing,
 	Nested,

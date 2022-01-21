@@ -11,13 +11,13 @@ import java.util.List;
 
 public class AggRsp extends AggDto {
 	
-	private List<Double>  values= Lists.newArrayList();
-	private boolean keyed=false;
+	private List<Double> values = Lists.newArrayList();
+	private boolean keyed = false;
 	private Object missing;
 	private String script;
 	private String format;
-	private boolean explain=false;
-	private int size=1;
-	private int from=10;
-	private 
+	private boolean explain = false;
+	private int size = 1;
+	private int from = 10;
+	private List<TermQueryRsp> termQueries;
 }
