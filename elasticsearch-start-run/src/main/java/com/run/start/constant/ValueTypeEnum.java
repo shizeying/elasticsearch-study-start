@@ -3,6 +3,7 @@ package com.run.start.constant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,8 +22,11 @@ public enum ValueTypeEnum {
 	private String name;
 	
 	public static ValueTypeEnum getTypeFromName(String name) {
+		if (StringUtils.isAllBlank(name)){
+			return null;
+		}
 		for (ValueTypeEnum type : ValueTypeEnum.values()) {
-			if (type.getName().equals(name)) {
+			if (type.getName().equalsIgnoreCase(name)) {
 				return type;
 			}
 		}

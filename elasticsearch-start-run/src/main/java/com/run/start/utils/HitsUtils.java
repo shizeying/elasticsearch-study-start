@@ -49,10 +49,12 @@ public class HitsUtils {
 						if (Objects.nonNull(read) && read instanceof String) {
 							final String content = (String) read;
 							for (Text fragment : fragments) {
-								final String text = fragment.string().replaceAll("<em>", "").replaceAll("</em>", "");
+								final String text = StringUtils.replaceAll()
+										
+										fragment.string().replaceAll("<em>", "").replaceAll("</em>", "");
 								if (StringUtils.contains(content, text)) {
 									log.info("进来了");
-									final String[] split = content.split(text);
+									final String[] split = StringUtils.split(content, text);
 									if (split.length == 0) {
 										parse.set(key, fragment.string());
 									} else {

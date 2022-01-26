@@ -3,13 +3,14 @@ package com.run.start.convert;
 import com.run.start.constant.AggEnum;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
+import java.util.Optional;
 
 @Converter(autoApply = true)
 public class AggEnumConvert implements AttributeConverter<AggEnum, String> {
 	
 	@Override
 	public String convertToDatabaseColumn(AggEnum attribute) {
-		return attribute.getName();
+		return Optional.ofNullable(attribute.getName()).map(String::toLowerCase).orElse(null);
 	}
 	
 	@Override

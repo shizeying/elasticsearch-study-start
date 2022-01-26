@@ -1,6 +1,7 @@
 package com.run.start.bean.dto;
 
 import com.run.start.constant.AggEnum;
+import com.run.start.constant.DateHistogramIntervalEnum;
 import com.run.start.constant.ValueTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,4 +25,7 @@ public class AggDto implements Serializable {
 	private List<Long> aggIds;
 	private IndexDto indexPojo;
 	private ValueTypeEnum ValueType;
+	private String childType;
+	private Integer interval=1;
+	private DateHistogramIntervalEnum dateHistogramInterval;
 }

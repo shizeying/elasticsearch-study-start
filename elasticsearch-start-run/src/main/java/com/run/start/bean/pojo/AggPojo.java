@@ -2,11 +2,13 @@ package com.run.start.bean.pojo;
 
 import com.run.start.base.BaseEntity;
 import com.run.start.constant.AggEnum;
+import com.run.start.constant.DateHistogramIntervalEnum;
 import com.run.start.constant.ValueTypeEnum;
 import com.run.start.convert.AggEnumConvert;
 import com.run.start.convert.ListLongConvert;
 import com.run.start.convert.ValueTypeEnumConvert;
 import lombok.*;
+import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -48,6 +50,9 @@ public class AggPojo extends BaseEntity implements Serializable {
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
 	private IndexPojo indexPojo;
+	private String childType;
+	private Integer interval=1;
+	private DateHistogramIntervalEnum dateHistogramInterval;
 	//
 	// @OneToOne(targetEntity = )
 	// private ScriptPojo script;
